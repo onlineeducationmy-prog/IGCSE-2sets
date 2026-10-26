@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IGCSE SIMULATION - MRSM Preparation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#4f46e5',
+              600: '#4338ca',
+              700: '#3730a3',
+              dark: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex flex-col items-center justify-start p-3 sm:p-6">
+
+  <!-- Main Container (App Shell) -->
+  <div id="app" class="w-full max-w-md bg-slate-50 min-h-[90vh] rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden relative border-4 border-slate-800">
+    
+    <!-- Top Bar -->
+    <header class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-3">
+        <button id="back-btn" onclick="goHome()" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition">
+          <i class="fa-solid fa-chevron-left text-sm"></i>
+        </button>
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md">
+            <i class="fa-solid fa-graduation-cap text-xs"></i>
+          </div>
+          <div>
+            <h1 class="text-xs font-extrabold tracking-wider uppercase text-indigo-400">IGCSE SIMULATION</h1>
+            <p id="header-subtitle" class="text-[10px] text-slate-400">MRSM admission practice test</p>
+          </div>
+        </div>
+      </div>
+      <button onclick="openMenuModal()" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition">
+        <i class="fa-solid fa-ellipsis text-sm"></i>
+      </button>
+    </header>
+
+    <!-- Dynamic Content Area -->
+    <main id="main-content" class="flex-1 flex flex-col p-4 sm:p-6 overflow-y-auto">
+      <!-- Rendered via JavaScript -->
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <footer class="bg-slate-900 py-3 px-6 flex justify-center items-center border-t border-slate-800">
+      <div class="w-32 h-1 bg-slate-600 rounded-full"></div>
+    </footer>
+  </div>
+
+  <!-- Modal / Message Box Container -->
+  <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center transform transition-all scale-95 opacity-0" id="modal-content-box">
+      <div id="modal-icon" class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+        <i class="fa-solid fa-circle-info"></i>
+      </div>
+      <h3 id="modal-title" class="text-xl font-bold text-slate-800 mb-2">Notification</h3>
+      <p id="modal-message" class="text-sm text-slate-600 mb-6">System message...</p>
+      <div id="modal-actions" class="flex space-x-3">
+        <button onclick="closeModal()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg hover:bg-indigo-700 transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    // Dataset for Simulation Set 1
+    const igcseQuestionsSet1 = [
+      {
+        q: "What number comes next in the sequence? 2, 6, 12, 20, 30, ___",
+        options: ["40", "41", "42", "44"],
+        answer: 2,
+        explanation: "The differences are 4, 6, 8, and 10. The next difference is 12, so 30 + 12 = 42.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Complete the letter sequence: B, E, I, N, T, ___",
+        options: ["A", "Z", "B", "C"],
+        answer: 0,
+        explanation: "The letters advance by 3, 4, 5, and 6 positions. The next jump is 7 positions. From T, moving seven places forward wraps around the alphabet to A.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "All glips are norks. No norks are vels. Which statement must be true?",
+        options: [
+          "Some glips are vels.",
+          "No glips are vels.",
+          "All vels are glips.",
+          "Some norks are not glips."
+        ],
+        answer: 1,
+        explanation: "Since every glip is a nork and no nork is a vel, no glip can be a vel.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "A shape rotates 90 degrees clockwise each time. If it points North initially, which direction will it point after 7 rotations?",
+        options: ["North", "East", "South", "West"],
+        answer: 3,
+        explanation: "Four rotations return the shape to North. Seven rotations have the same effect as three rotations: East, South, then West.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Find the missing number: 3, 8, 18, 38, 78, ___",
+        options: ["148", "156", "158", "160"],
+        answer: 2,
+        explanation: "Each term is multiplied by 2 and then 2 is added. Thus, 78 × 2 + 2 = 158.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Maya is taller than Noor. Noor is taller than Liam. Ethan is shorter than Liam. Who is the second tallest?",
+        options: ["Maya", "Noor", "Liam", "Ethan"],
+        answer: 1,
+        explanation: "The order from tallest to shortest is Maya, Noor, Liam, Ethan. Noor is second tallest.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "If yesterday was two days before Friday, what day is tomorrow?",
+        options: ["Wednesday", "Thursday", "Friday", "Saturday"],
+        answer: 2,
+        explanation: "Two days before Friday is Wednesday, so yesterday was Wednesday. Today is Thursday and tomorrow is Friday.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Four people each shake hands with every other person exactly once. How many handshakes take place?",
+        options: ["4", "5", "6", "8"],
+        answer: 2,
+        explanation: "Each handshake is a unique pair. The number of pairs is 4 × 3 ÷ 2 = 6.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "A code changes CAT into DBU by moving each letter one place forward in the alphabet. How is FISH coded using the same rule?",
+        options: ["GJTI", "GJSH", "EHRG", "GITH"],
+        answer: 0,
+        explanation: "Move each letter one place forward: F becomes G, I becomes J, S becomes T, and H becomes I. Therefore, FISH becomes GJTI.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Choose the correct word to complete the sentence: The unexpected ______ of the guests caused a delay in the ceremony.",
+        options: ["arrive", "arrival", "arrivingly", "arrived"],
+        answer: 1,
+        explanation: "Arrival is a noun and fits after the adjective 'unexpected' as the subject of the sentence.",
+        catName: "English"
+      },
+      {
+        q: "Choose the grammatically correct sentence.",
+        options: [
+          "Neither of the answers are correct.",
+          "Neither of the answers is correct.",
+          "Neither answers is correct.",
+          "Neither of answers are correct."
+        ],
+        answer: 1,
+        explanation: "'Neither' is traditionally treated as singular in this construction, so it takes the singular verb 'is'.",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct word: The scientist, ______ research changed modern medicine, received an award.",
+        options: ["who", "whom", "whose", "which"],
+        answer: 2,
+        explanation: "'Whose' indicates possession. The research belongs to the scientist.",
+        catName: "English"
+      },
+      {
+        q: "Choose the word closest in meaning to 'meticulous'.",
+        options: ["Careless", "Thorough", "Impatient", "Ordinary"],
+        answer: 1,
+        explanation: "'Meticulous' means extremely careful and attentive to detail. 'Thorough' is the closest option.",
+        catName: "English"
+      },
+      {
+        q: "Complete the sentence: Hardly ______ the train left the station when it began to rain.",
+        options: ["has", "did", "had", "was"],
+        answer: 2,
+        explanation: "'Hardly ... when' commonly takes inversion with the past perfect: 'Hardly had the train left ... when ...'.",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct word: Despite ______ exhausted, she continued working until the task was complete.",
+        options: ["be", "being", "been", "to be"],
+        answer: 1,
+        explanation: "'Despite' is followed by a noun or gerund. Therefore, 'being exhausted' is correct.",
+        catName: "English"
+      },
+      {
+        q: "Which sentence uses the semicolon correctly?",
+        options: [
+          "I was tired; because I had not slept.",
+          "I was tired; I had not slept well.",
+          "I; was tired because I had not slept.",
+          "I was; tired, I had not slept well."
+        ],
+        answer: 1,
+        explanation: "A semicolon can join two closely related independent clauses. Both parts can stand as complete sentences.",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct word: If he ______ earlier, he would have caught the bus.",
+        options: ["leaves", "left", "had left", "would leave"],
+        answer: 2,
+        explanation: "This is a third conditional sentence: 'If + past perfect, would have + past participle'.",
+        catName: "English"
+      },
+      {
+        q: "What does the expression 'to read between the lines' mean?",
+        options: [
+          "To read a text very quickly.",
+          "To identify the hidden or implied meaning.",
+          "To memorise every sentence.",
+          "To correct grammatical mistakes."
+        ],
+        answer: 1,
+        explanation: "The expression means understanding something that is suggested but not directly stated.",
+        catName: "English"
+      },
+      {
+        q: "A rectangular garden is 12 m long and half as wide as it is long. What is its perimeter?",
+        options: ["24 m", "30 m", "36 m", "48 m"],
+        answer: 2,
+        explanation: "The width is 12 ÷ 2 = 6 m. Perimeter = 2 × (12 + 6) = 36 m.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A student spends 3/8 of her money on books and 1/4 on stationery. What fraction of her money remains?",
+        options: ["1/8", "3/8", "1/2", "5/8"],
+        answer: 1,
+        explanation: "The total spent is 3/8 + 1/4 = 3/8 + 2/8 = 5/8. The remaining fraction is 1 − 5/8 = 3/8.",
+        catName: "Mathematics"
+      },
+      {
+        q: "The average of five numbers is 18. Four of the numbers are 12, 16, 20 and 24. What is the fifth number?",
+        options: ["16", "18", "20", "22"],
+        answer: 1,
+        explanation: "The total of all five numbers is 5 × 18 = 90. The four known numbers total 72, so the fifth number is 90 − 72 = 18.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A jacket costs RM240. Its price is reduced by 15%. What is the sale price?",
+        options: ["RM196", "RM200", "RM204", "RM216"],
+        answer: 2,
+        explanation: "The discount is 0.15 × RM240 = RM36. The sale price is RM240 − RM36 = RM204.",
+        catName: "Mathematics"
+      },
+      {
+        q: "The ratio of red to blue marbles is 3:5. There are 64 marbles altogether. How many are blue?",
+        options: ["24", "32", "40", "48"],
+        answer: 2,
+        explanation: "There are 3 + 5 = 8 equal parts. Each part is 64 ÷ 8 = 8 marbles. Blue marbles = 5 × 8 = 40.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A triangle has a base of 14 cm and a perpendicular height of 9 cm. What is its area?",
+        options: ["46 cm²", "63 cm²", "126 cm²", "252 cm²"],
+        answer: 1,
+        explanation: "Area of a triangle = 1/2 × base × height = 1/2 × 14 × 9 = 63 cm².",
+        catName: "Mathematics"
+      },
+      {
+        q: "A car travels 150 km in 2.5 hours at a constant speed. How far will it travel in 4 hours at the same speed?",
+        options: ["200 km", "220 km", "240 km", "250 km"],
+        answer: 2,
+        explanation: "Speed = 150 ÷ 2.5 = 60 km/h. In 4 hours, the car travels 60 × 4 = 240 km.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A number is multiplied by 4 and then 7 is subtracted. The result is 29. What is the number?",
+        options: ["7", "8", "9", "10"],
+        answer: 2,
+        explanation: "Let the number be x. Then 4x − 7 = 29, so 4x = 36 and x = 9.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A fair six-sided die is rolled once. What is the probability of obtaining a number greater than 4?",
+        options: ["1/6", "1/3", "1/2", "2/3"],
+        answer: 1,
+        explanation: "The favourable outcomes are 5 and 6. Therefore, the probability is 2/6 = 1/3.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A plant is placed in dim light while all other conditions remain constant. What is most likely to happen to its rate of photosynthesis?",
+        options: [
+          "It will increase indefinitely.",
+          "It will decrease if light becomes a limiting factor.",
+          "It will remain at its maximum rate.",
+          "It will stop absorbing water immediately."
+        ],
+        answer: 1,
+        explanation: "Light supplies energy for photosynthesis. When light intensity becomes a limiting factor, the rate of photosynthesis decreases.",
+        catName: "Science"
+      },
+      {
+        q: "Which cell structure controls the movement of substances into and out of the cell?",
+        options: ["Nucleus", "Cell membrane", "Cytoplasm", "Cell wall"],
+        answer: 1,
+        explanation: "The cell membrane regulates the movement of substances into and out of the cell.",
+        catName: "Science"
+      },
+      {
+        q: "A sealed container holds ice and liquid water at 0°C. Heat is supplied while both phases remain present. What happens to the temperature during melting?",
+        options: [
+          "It rises steadily.",
+          "It falls steadily.",
+          "It remains constant until the ice has melted.",
+          "It immediately reaches 100°C."
+        ],
+        answer: 2,
+        explanation: "At a given pressure, pure ice melts at 0°C. During melting, supplied energy is used for the change of state rather than raising the temperature.",
+        catName: "Science"
+      },
+      {
+        q: "A student investigates how fertiliser affects plant growth. Which variable should be kept constant for a fair test?",
+        options: [
+          "The amount of fertiliser applied.",
+          "The height of the plants at the end.",
+          "The type of plant and the amount of water supplied.",
+          "The final difference in plant height."
+        ],
+        answer: 2,
+        explanation: "The plant type and water supply should be controlled so that differences in growth can be attributed more reliably to the fertiliser.",
+        catName: "Science"
+      },
+      {
+        q: "Which process allows water vapour to change directly into liquid water?",
+        options: ["Evaporation", "Condensation", "Sublimation", "Melting"],
+        answer: 1,
+        explanation: "Condensation occurs when a gas changes into a liquid, usually as it loses thermal energy.",
+        catName: "Science"
+      },
+      {
+        q: "In a simple series circuit, one bulb is removed. What happens to the other bulb?",
+        options: [
+          "It becomes brighter.",
+          "It remains equally bright.",
+          "It goes out because the circuit is broken.",
+          "It continues to glow using stored electricity."
+        ],
+        answer: 2,
+        explanation: "Removing one bulb from a series circuit breaks the single path for current, so current stops flowing through the other bulb.",
+        catName: "Science"
+      },
+      {
+        q: "Which statement best explains why a metal spoon feels colder than a wooden spoon in the same room?",
+        options: [
+          "Metal is always at a lower temperature than wood.",
+          "Metal conducts heat away from the hand more quickly.",
+          "Wood produces heat when touched.",
+          "Metal contains no thermal energy."
+        ],
+        answer: 1,
+        explanation: "At the same temperature, metal generally transfers heat away from the hand more quickly than wood, making it feel colder.",
+        catName: "Science"
+      },
+      {
+        q: "In a food chain, grass is eaten by grasshoppers, which are eaten by frogs. What is the most likely immediate effect on the frog population if the grasshopper population decreases substantially?",
+        options: [
+          "The frog population may decrease because less food is available.",
+          "The frog population must increase immediately.",
+          "The grass population must decrease.",
+          "The frogs will become producers."
+        ],
+        answer: 0,
+        explanation: "Grasshoppers are a food source for frogs. A substantial decrease in grasshoppers may reduce food availability and cause the frog population to decline.",
+        catName: "Science"
+      }
+    ];
+
+    // Dataset for Simulation Set 2
+    const igcseQuestionsSet2 = [
+      {
+        q: "Find the next number in the sequence: 4, 9, 19, 39, 79, ___",
+        options: ["119", "149", "159", "169"],
+        answer: 2,
+        explanation: "Each number is multiplied by 2 and then 1 is added. Therefore, 79 × 2 + 1 = 159.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Complete the letter sequence: C, F, J, O, U, ___",
+        options: ["A", "B", "C", "D"],
+        answer: 1,
+        explanation: "The letters move forward by 3, 4, 5, and 6 positions. The next movement is 7 positions forward from U, which gives B when the alphabet wraps around after Z.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "All glips are norks. No norks are vens. Which statement must be true?",
+        options: [
+          "Some glips are vens.",
+          "All vens are glips.",
+          "No glips are vens.",
+          "Some norks are glips."
+        ],
+        answer: 2,
+        explanation: "Every glip belongs to the group of norks, and no nork is a ven. Therefore, no glip can be a ven.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Five machines make five identical components in five minutes. If all machines work at the same constant rate, how many minutes would 20 machines take to make 20 components?",
+        options: ["5 minutes", "10 minutes", "20 minutes", "25 minutes"],
+        answer: 0,
+        explanation: "Each machine makes one component in five minutes. Working simultaneously, 20 machines can make 20 components in five minutes.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Which number does not follow the same rule as the others?",
+        options: ["27", "64", "100", "125"],
+        answer: 2,
+        explanation: "27 = 3³, 64 = 4³, and 125 = 5³ are perfect cubes. The number 100 is not a perfect cube.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Five students stand in a line. Mira is ahead of Noah. Noah is ahead of Olivia. Peter is behind Olivia. Quinn is behind Peter. Who stands in the middle?",
+        options: ["Mira", "Noah", "Olivia", "Peter"],
+        answer: 2,
+        explanation: "The order is Mira, Noah, Olivia, Peter, Quinn. Olivia is third out of five students, so she stands in the middle.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "A large cube is painted on all six faces and then cut into 64 identical smaller cubes. How many smaller cubes have exactly one painted face?",
+        options: ["8", "16", "24", "32"],
+        answer: 2,
+        explanation: "The large cube is divided into 4 × 4 × 4 smaller cubes. Each face has (4 − 2)² = 4 cubes with exactly one painted face. Across six faces, there are 6 × 4 = 24 such cubes.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "In a code, each letter is replaced by the letter three places after it in the alphabet. How is BRAVE coded?",
+        options: ["EUDYH", "EUZYG", "FUDYH", "EUCYH"],
+        answer: 0,
+        explanation: "Move each letter three places forward: B → E, R → U, A → D, V → Y, and E → H. Therefore, BRAVE becomes EUDYH.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "A code changes the first letter to the next letter in the alphabet, the second letter to the next two letters, and the third letter to the next three letters. What does CAT become?",
+        options: ["DBW", "DCW", "DBV", "ECW"],
+        answer: 1,
+        explanation: "C moves forward one place to D, A moves forward two places to C, and T moves forward three places to W. Therefore, CAT becomes DCW.",
+        catName: "IQ / Logical Reasoning"
+      },
+      {
+        q: "Choose the word closest in meaning to 'meticulous'.",
+        options: ["Careless", "Thorough", "Impatient", "Uncertain"],
+        answer: 1,
+        explanation: "'Meticulous' means showing great attention to detail and being very careful and thorough.",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct option: Hardly ______ the match when it began to rain heavily.",
+        options: [
+          "had they started",
+          "they had started",
+          "they started",
+          "did they started"
+        ],
+        answer: 0,
+        explanation: "When 'hardly' begins a sentence in this structure, subject-auxiliary inversion is used: 'Hardly had they started the match when it began to rain heavily.'",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct word: The scientist's findings were based on reliable ______ rather than personal opinions.",
+        options: ["evident", "evidently", "evidence", "evidenced"],
+        answer: 2,
+        explanation: "'Evidence' is the noun needed after the adjective 'reliable'.",
+        catName: "English"
+      },
+      {
+        q: "Which sentence uses 'fewer' correctly?",
+        options: [
+          "There is fewer water in this bottle.",
+          "We made fewer mistakes in the second attempt.",
+          "She has fewer patience than her brother.",
+          "The journey took fewer time than expected."
+        ],
+        answer: 1,
+        explanation: "'Fewer' is used with countable plural nouns, such as 'mistakes'.",
+        catName: "English"
+      },
+      {
+        q: "Choose the grammatically correct sentence.",
+        options: [
+          "Neither of the answers are correct.",
+          "Neither of the answers is correct.",
+          "Neither answers is correct.",
+          "Neither of answers are correct."
+        ],
+        answer: 1,
+        explanation: "'Neither' is treated as singular in formal grammar, so it takes the singular verb 'is' in this sentence.",
+        catName: "English"
+      },
+      {
+        q: "By the time the rescue team arrived, the hikers ______ for several hours.",
+        options: [
+          "wait",
+          "have waited",
+          "had been waiting",
+          "will have waited"
+        ],
+        answer: 2,
+        explanation: "The past perfect continuous describes an activity that continued for a period of time before another event in the past.",
+        catName: "English"
+      },
+      {
+        q: "Which sentence uses the apostrophe correctly?",
+        options: [
+          "The two childrens' bags were missing.",
+          "The two children's bags were missing.",
+          "The two childrens bags' were missing.",
+          "The two childrens bags were missing."
+        ],
+        answer: 1,
+        explanation: "'Children' is an irregular plural noun that does not end in -s. To show possession, add apostrophe-s: 'children's bags'.",
+        catName: "English"
+      },
+      {
+        q: "Choose the word that best completes the sentence: Although the instructions appeared complicated, they were actually quite ______ once explained clearly.",
+        options: ["comprehensible", "hostile", "fragile", "reluctant"],
+        answer: 0,
+        explanation: "'Comprehensible' means understandable.",
+        catName: "English"
+      },
+      {
+        q: "Choose the correct option: If I ______ about the road closure, I would have taken another route.",
+        options: ["know", "knew", "had known", "would know"],
+        answer: 2,
+        explanation: "This is a third conditional sentence describing an unreal past situation. The 'if' clause uses the past perfect: 'If I had known...'.",
+        catName: "English"
+      },
+      {
+        q: "A number leaves a remainder of 3 when divided by 7. Which of the following could be that number?",
+        options: ["45", "49", "52", "56"],
+        answer: 2,
+        explanation: "52 = 7 × 7 + 3, so dividing 52 by 7 leaves a remainder of 3.",
+        catName: "Mathematics"
+      },
+      {
+        q: "The interior angles of a pentagon are 95°, 110°, 120°, 85°, and x°. Find x.",
+        options: ["130°", "135°", "140°", "150°"],
+        answer: 0,
+        explanation: "The sum of the interior angles of a pentagon is (5 − 2) × 180° = 540°. The known angles total 410°, so x = 540° − 410° = 130°.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A rectangle has a perimeter of 64 cm. Its length is 4 cm greater than its width. What is its area?",
+        options: ["240 cm²", "252 cm²", "255 cm²", "260 cm²"],
+        answer: 1,
+        explanation: "Half the perimeter is 32 cm, so length + width = 32. Width = 14 cm, length = 18 cm. Area = 14 × 18 = 252 cm².",
+        catName: "Mathematics"
+      },
+      {
+        q: "A shop reduces the price of a bag by 20%. The reduced price is RM96. What was the original price?",
+        options: ["RM115.20", "RM120", "RM125", "RM128"],
+        answer: 1,
+        explanation: "After a 20% reduction, the new price is 80% of the original. Original price = RM96 ÷ 0.8 = RM120.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A regular hexagon has a perimeter of 72 cm. What is its area? Use Area = (3√3 ÷ 2)s², where s is side length.",
+        options: ["216√3 cm²", "324√3 cm²", "432√3 cm²", "648√3 cm²"],
+        answer: 0,
+        explanation: "Each side is 72 ÷ 6 = 12 cm. The area is (3√3 ÷ 2) × 12² = 216√3 cm².",
+        catName: "Mathematics"
+      },
+      {
+        q: "The average of five numbers is 18. Four of the numbers are 12, 16, 20, and 24. What is the fifth number?",
+        options: ["16", "18", "20", "22"],
+        answer: 1,
+        explanation: "The total is 5 × 18 = 90. The four known numbers total 72. The fifth number is 90 − 72 = 18.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A bag contains 4 red, 5 blue, and 3 green counters. One counter is chosen at random. What is the probability that it is not blue?",
+        options: ["5/12", "1/2", "7/12", "2/3"],
+        answer: 2,
+        explanation: "There are 12 counters in total. Seven are not blue, so the probability is 7/12.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A sequence begins 2, 6, 12, 20, 30, ... Its nth term is n(n + 1). What is the 15th term?",
+        options: ["210", "220", "225", "240"],
+        answer: 3,
+        explanation: "Using the given formula, the 15th term is 15(15 + 1) = 15 × 16 = 240.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A triangle has angles in the ratio 2 : 3 : 4. What is the size of its largest angle?",
+        options: ["60°", "70°", "80°", "90°"],
+        answer: 2,
+        explanation: "The ratio parts total 2 + 3 + 4 = 9. Each part is 180° ÷ 9 = 20°. The largest angle is 4 × 20° = 80°.",
+        catName: "Mathematics"
+      },
+      {
+        q: "A metal block has a mass of 360 g and a volume of 120 cm³. What is its density?",
+        options: ["0.3 g/cm³", "2 g/cm³", "3 g/cm³", "4 g/cm³"],
+        answer: 2,
+        explanation: "Density = mass ÷ volume = 360 g ÷ 120 cm³ = 3 g/cm³.",
+        catName: "Science"
+      },
+      {
+        q: "Why does a metal spoon feel colder than a wooden spoon when both have been left in the same room?",
+        options: [
+          "Metal is always at a lower temperature than wood.",
+          "Metal conducts heat away from the hand more quickly.",
+          "Wood produces heat when touched.",
+          "Metal contains no thermal energy."
+        ],
+        answer: 1,
+        explanation: "Metal conducts thermal energy away from the hand more quickly than wood does.",
+        catName: "Science"
+      },
+      {
+        q: "Why do plants need light for photosynthesis?",
+        options: [
+          "Light provides the energy needed to make glucose.",
+          "Light supplies the carbon dioxide used by the plant.",
+          "Light turns oxygen directly into glucose.",
+          "Light replaces the need for water."
+        ],
+        answer: 0,
+        explanation: "Photosynthesis uses light energy to help convert carbon dioxide and water into glucose and oxygen.",
+        catName: "Science"
+      },
+      {
+        q: "A student connects two identical bulbs in series to a battery. What happens if one bulb is removed?",
+        options: [
+          "The other bulb becomes brighter.",
+          "The other bulb remains equally bright.",
+          "The circuit is broken and the other bulb goes out.",
+          "The battery produces twice as much voltage."
+        ],
+        answer: 2,
+        explanation: "Removing one bulb in a series circuit breaks the single path for current.",
+        catName: "Science"
+      },
+      {
+        q: "Which process changes water vapour into liquid water?",
+        options: ["Evaporation", "Condensation", "Sublimation", "Melting"],
+        answer: 1,
+        explanation: "Condensation occurs when water vapour cools and changes into liquid water.",
+        catName: "Science"
+      },
+      {
+        q: "Which organ filters waste products from the blood and produces urine?",
+        options: ["Heart", "Lungs", "Kidneys", "Small intestine"],
+        answer: 2,
+        explanation: "The kidneys filter the blood, removing wastes and excess water and salts to form urine.",
+        catName: "Science"
+      },
+      {
+        q: "Equal amounts of sugar are added to hot and cold water and stirred equally. The sugar dissolves faster in the hot water. What is the best explanation?",
+        options: [
+          "Hot water contains no water molecules.",
+          "Particles in hot water move faster on average.",
+          "Sugar becomes a different substance in hot water.",
+          "Cold water cannot dissolve sugar."
+        ],
+        answer: 1,
+        explanation: "At a higher temperature, water molecules have greater average kinetic energy and move faster.",
+        catName: "Science"
+      },
+      {
+        q: "Which statement about the planets in the Solar System is correct?",
+        options: [
+          "All planets have the same orbital period.",
+          "Mercury takes longer to orbit the Sun than Earth.",
+          "Planets farther from the Sun generally have longer orbital periods.",
+          "Planets produce visible light through nuclear fusion in the same way as stars."
+        ],
+        answer: 2,
+        explanation: "Planets farther from the Sun generally take longer to complete an orbit.",
+        catName: "Science"
+      }
+    ];
+
+    // State management
+    let currentScreen = 'home';
+    let activeSetId = 1;
+    let activeQuestions = igcseQuestionsSet1;
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let questionStatus = {};
+    let timerSeconds = 35 * 60; // 35 minutes
+    let timerInterval = null;
+
+    window.onload = function() {
+      renderScreen();
+    };
+
+    function goHome() {
+      if (currentScreen === 'exam') {
+        showCustomModal(
+          'Exit Simulation?',
+          'Are you sure you want to exit? Your exam progress and timer will be reset.',
+          'Yes, Exit',
+          () => {
+            clearInterval(timerInterval);
+            currentScreen = 'home';
+            renderScreen();
+          },
+          true
+        );
+      } else {
+        currentScreen = 'home';
+        renderScreen();
+      }
+    }
+
+    function selectSet(setId) {
+      activeSetId = setId;
+      activeQuestions = setId === 1 ? igcseQuestionsSet1 : igcseQuestionsSet2;
+      startExam();
+    }
+
+    function startExam() {
+      currentScreen = 'exam';
+      currentQuestionIndex = 0;
+      userAnswers = {};
+      questionStatus = {};
+      timerSeconds = 35 * 60;
+      
+      activeQuestions.forEach((_, idx) => {
+        questionStatus[idx] = 'unanswered';
+      });
+
+      renderScreen();
+      startTimer();
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          submitExam();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const el = document.getElementById('timer-display');
+      if (el) {
+        const mins = Math.floor(timerSeconds / 60);
+        const secs = timerSeconds % 60;
+        el.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        if (timerSeconds <= 300) {
+          el.classList.add('text-rose-500', 'animate-pulse');
+        }
+      }
+    }
+
+    function renderScreen() {
+      const main = document.getElementById('main-content');
+      const backBtn = document.getElementById('back-btn');
+      const subtitleEl = document.getElementById('header-subtitle');
+
+      if (currentScreen === 'home') {
+        backBtn.classList.add('opacity-50', 'pointer-events-none');
+        subtitleEl.innerText = 'MRSM admission practice test';
+        main.innerHTML = `
+          <div class="flex flex-col items-center text-center my-auto py-2">
+            <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-xl shadow-indigo-200 mb-5">
+              <i class="fa-solid fa-book-open text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2">IGCSE Simulation Portal</h2>
+            <p class="text-xs text-slate-500 max-w-xs mb-6 leading-relaxed">
+              Prepare for the MRSM IGCSE admission assessment with practice questions covering IQ, English, Mathematics, and Science. Select a set below to begin:
+            </p>
+
+            <div class="w-full space-y-3 mb-6">
+              <button onclick="selectSet(1)" class="w-full p-4 bg-white hover:bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-600 rounded-2xl shadow-sm transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3 text-left">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">1</div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600">SIMULATION SET 1</h3>
+                    <p class="text-[11px] text-slate-500">35 Questions • 35 Mins</p>
+                  </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-indigo-400"></i>
+              </button>
+
+              <button onclick="selectSet(2)" class="w-full p-4 bg-white hover:bg-emerald-50 border-2 border-emerald-200 hover:border-emerald-600 rounded-2xl shadow-sm transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3 text-left">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">2</div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-600">SIMULATION SET 2</h3>
+                    <p class="text-[11px] text-slate-500">35 Questions • 35 Mins</p>
+                  </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-emerald-400"></i>
+              </button>
+            </div>
+
+            <div class="w-full bg-white rounded-3xl p-4 shadow-sm border border-slate-200 text-left space-y-3">
+              <div class="flex items-center space-x-3 text-xs text-slate-700 font-medium">
+                <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-check text-[10px]"></i></div>
+                <span>Automatic Grading & Timer</span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs text-slate-700 font-medium">
+                <div class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-lightbulb text-[10px]"></i></div>
+                <span>Instant Answer Explanations</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentScreen === 'exam') {
+        backBtn.classList.remove('opacity-50', 'pointer-events-none');
+        subtitleEl.innerText = `Simulation Set ${activeSetId} Mode`;
+        renderExamQuestion();
+      } else if (currentScreen === 'results') {
+        backBtn.classList.remove('opacity-50', 'pointer-events-none');
+        subtitleEl.innerText = `Simulation Set ${activeSetId} Report`;
+        renderResults();
+      }
+    }
+
+    function renderExamQuestion() {
+      const main = document.getElementById('main-content');
+      const q = activeQuestions[currentQuestionIndex];
+      const selectedOpt = userAnswers[currentQuestionIndex];
+      const isAnswered = selectedOpt !== undefined;
+      const answeredCount = Object.keys(userAnswers).length;
+
+      let optionsHtml = '';
+      q.options.forEach((opt, idx) => {
+        let btnClass = "bg-white border-slate-200 text-slate-700 hover:border-indigo-300";
+        let iconHtml = `<div class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs font-semibold mr-3">${String.fromCharCode(65 + idx)}</div>`;
+
+        if (isAnswered) {
+          if (idx === q.answer) {
+            btnClass = "bg-emerald-50 border-emerald-500 text-emerald-900 shadow-sm";
+            iconHtml = `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs mr-3"><i class="fa-solid fa-check"></i></div>`;
+          } else if (idx === selectedOpt && selectedOpt !== q.answer) {
+            btnClass = "bg-rose-50 border-rose-500 text-rose-900 shadow-sm";
+            iconHtml = `<div class="w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs mr-3"><i class="fa-solid fa-xmark"></i></div>`;
+          } else {
+            btnClass = "bg-slate-50 border-slate-200 text-slate-400 opacity-60";
+          }
+        }
+
+        optionsHtml += `
+          <button onclick="selectOption(${idx})" ${isAnswered ? 'disabled' : ''} class="w-full text-left p-4 rounded-2xl border-2 transition flex items-center justify-between ${btnClass}">
+            <div class="flex items-center space-x-3">
+              ${iconHtml}
+              <span class="text-sm font-semibold">${opt}</span>
+            </div>
+          </button>
+        `;
+      });
+
+      main.innerHTML = `
+        <div class="flex items-center justify-between mb-4 bg-white p-3 rounded-2xl border border-slate-200">
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-bold text-[11px] rounded-lg">${q.catName}</span>
+          </div>
+          <div class="flex items-center space-x-1.5 text-slate-700 font-extrabold text-sm bg-slate-100 px-3 py-1 rounded-xl">
+            <i class="fa-solid fa-clock text-indigo-600 text-xs"></i>
+            <span id="timer-display">35:00</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 mb-4">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Question ${currentQuestionIndex + 1} of ${activeQuestions.length}</span>
+            <button onclick="toggleFlag()" class="text-xs font-semibold px-2.5 py-1 rounded-lg border transition ${questionStatus[currentQuestionIndex] === 'flagged' ? 'bg-amber-100 border-amber-400 text-amber-700' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}">
+              <i class="fa-solid fa-flag mr-1"></i> ${questionStatus[currentQuestionIndex] === 'flagged' ? 'Flagged' : 'Flag'}
+            </button>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 leading-snug mb-5">${q.q}</h3>
+          
+          <div class="space-y-3">
+            ${optionsHtml}
+          </div>
+        </div>
+
+        ${isAnswered ? `
+          <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-4 animate-fade-in">
+            <div class="flex items-center space-x-2 text-indigo-900 font-bold text-sm mb-1">
+              <i class="fa-solid fa-lightbulb text-indigo-600"></i>
+              <span>Answer Explanation:</span>
+            </div>
+            <p class="text-xs text-indigo-950 leading-relaxed">${q.explanation}</p>
+          </div>
+        ` : ''}
+
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <button onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled opacity-50' : ''} class="py-3 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-2xl transition text-sm shadow-sm">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Previous
+          </button>
+          <button onclick="nextQuestion()" class="py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition text-sm shadow-md shadow-indigo-200 flex items-center justify-center space-x-1">
+            <span>${currentQuestionIndex === activeQuestions.length - 1 ? 'View Results' : 'Next'}</span>
+            <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-200 mb-6">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center space-x-1.5 font-bold text-xs text-slate-800">
+              <i class="fa-solid fa-list-check text-indigo-600"></i>
+              <span>Question Navigation</span>
+            </div>
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">${answeredCount} / ${activeQuestions.length} Answered</span>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-500 mb-3 px-1">
+            <div class="flex items-center space-x-1"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div><span>Answered</span></div>
+            <div class="flex items-center space-x-1"><div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div><span>Flagged</span></div>
+            <div class="flex items-center space-x-1"><div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div><span>Unanswered</span></div>
+          </div>
+
+          <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto p-1">
+            ${activeQuestions.map((_, idx) => {
+              let bg = "bg-slate-50 text-slate-600 border-slate-200";
+              if (userAnswers[idx] !== undefined) {
+                bg = "bg-emerald-100 text-emerald-800 border-emerald-400 font-bold";
+              }
+              if (questionStatus[idx] === 'flagged') {
+                bg = "bg-amber-100 text-amber-800 border-amber-400 font-bold";
+              }
+              if (idx === currentQuestionIndex) {
+                bg += " ring-2 ring-indigo-600 ring-offset-1";
+              }
+              return `<button onclick="jumpToQuestion(${idx})" class="h-10 rounded-xl border text-xs font-semibold transition flex items-center justify-center ${bg}">${idx + 1}</button>`;
+            }).join('')}
+          </div>
+
+          <button onclick="confirmSubmit()" class="w-full mt-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-md shadow-emerald-100 flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Submit Exam</span>
+          </button>
+        </div>
+      `;
+
+      updateTimerDisplay();
+    }
+
+    function selectOption(optIndex) {
+      userAnswers[currentQuestionIndex] = optIndex;
+      questionStatus[currentQuestionIndex] = 'answered';
+      renderExamQuestion();
+    }
+
+    function toggleFlag() {
+      if (questionStatus[currentQuestionIndex] === 'flagged') {
+        questionStatus[currentQuestionIndex] = userAnswers[currentQuestionIndex] !== undefined ? 'answered' : 'unanswered';
+      } else {
+        questionStatus[currentQuestionIndex] = 'flagged';
+      }
+      renderExamQuestion();
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderExamQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < activeQuestions.length - 1) {
+        currentQuestionIndex++;
+        renderExamQuestion();
+      } else {
+        confirmSubmit();
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      currentQuestionIndex = idx;
+      renderExamQuestion();
+    }
+
+    function confirmSubmit() {
+      const answeredCount = Object.keys(userAnswers).length;
+      const unanswered = activeQuestions.length - answeredCount;
+      
+      let msg = `You have answered ${answeredCount} out of ${activeQuestions.length} questions.`;
+      if (unanswered > 0) {
+        msg += ` There are ${unanswered} unanswered questions remaining.`;
+      }
+      msg += ` Are you sure you want to submit your exam now?`;
+
+      showCustomModal(
+        'Submit Exam Answers',
+        msg,
+        'Yes, Submit',
+        () => {
+          clearInterval(timerInterval);
+          currentScreen = 'results';
+          renderScreen();
+        },
+        true
+      );
+    }
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      currentScreen = 'results';
+      renderScreen();
+    }
+
+    function renderResults() {
+      const main = document.getElementById('main-content');
+      
+      let score = 0;
+      activeQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.answer) {
+          score++;
+        }
+      });
+
+      const percentage = Math.round((score / activeQuestions.length) * 100);
+      let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-300";
+      let badgeText = "Excellent! Passed successfully.";
+      if (percentage < 50) {
+        badgeColor = "bg-rose-100 text-rose-800 border-rose-300";
+        badgeText = "Needs Revision & Further Practice.";
+      } else if (percentage < 80) {
+        badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
+        badgeText = "Good Job, Almost Excellent!";
+      }
+
+      main.innerHTML = `
+        <div class="flex flex-col items-center text-center my-auto py-4">
+          <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-200 mb-5 relative">
+            <i class="fa-solid fa-trophy text-4xl"></i>
+            <div class="absolute -bottom-2 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border-2 border-white">Set ${activeSetId} Completed</div>
+          </div>
+
+          <h2 class="text-2xl font-black text-slate-900 mb-1">IGCSE Simulation Results</h2>
+          <p class="text-xs text-slate-500 mb-6">MRSM entrance preparation assessment report</p>
+
+          <div class="w-full bg-white rounded-3xl p-6 shadow-sm border border-slate-200 mb-6">
+            <div class="text-5xl font-extrabold text-indigo-600 mb-2">${score} <span class="text-2xl text-slate-400 font-bold">/ ${activeQuestions.length}</span></div>
+            <p class="text-sm font-bold text-slate-700 mb-3">Total Score: <span class="text-indigo-600">${percentage}%</span></p>
+            
+            <div class="py-2 px-4 rounded-2xl border ${badgeColor} text-xs font-semibold inline-block">
+              ${badgeText}
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 w-full mb-6">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 text-left">
+              <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Correct</span>
+              <p class="text-xl font-extrabold text-emerald-600">${score}</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 text-left">
+              <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Incorrect / Blank</span>
+              <p class="text-xl font-extrabold text-rose-600">${activeQuestions.length - score}</p>
+            </div>
+          </div>
+
+          <div class="flex space-x-3 w-full">
+            <button onclick="startExam()" class="flex-1 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition text-sm flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>Retake Set ${activeSetId}</span>
+            </button>
+            <button onclick="goHome()" class="flex-1 py-3.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-2xl transition text-sm flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function showCustomModal(title, message, confirmText, onConfirm, showCancel = false) {
+      const modal = document.getElementById('custom-modal');
+      const box = document.getElementById('modal-content-box');
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-message').innerText = message;
+      
+      const actions = document.getElementById('modal-actions');
+      if (showCancel) {
+        actions.innerHTML = `
+          <button onclick="closeModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">Cancel</button>
+          <button id="modal-confirm-btn" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-lg transition">${confirmText}</button>
+        `;
+        document.getElementById('modal-confirm-btn').onclick = () => {
+          closeModal();
+          if (onConfirm) onConfirm();
+        };
+      } else {
+        actions.innerHTML = `
+          <button onclick="closeModal()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-lg transition">${confirmText}</button>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('custom-modal');
+      const box = document.getElementById('modal-content-box');
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
+
+    function openMenuModal() {
+      showCustomModal(
+        'Information Menu',
+        'IGCSE Simulation v2.5 features two comprehensive practice test sets designed for students preparing for MRSM selection exams, complete with answer explanations and progress tracking.',
+        'Got it'
+      );
+    }
+  </script>
+</body>
+</html>
